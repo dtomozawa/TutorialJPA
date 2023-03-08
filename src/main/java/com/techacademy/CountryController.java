@@ -1,5 +1,4 @@
 package com.techacademy;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,23 +6,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 @Controller
 @RequestMapping("country")
 public class CountryController {
-
     private final CountryService service;
-
     public CountryController(CountryService service) {
         this.service = service;
     }
-
     @GetMapping("/list")
     public String getList(Model model) {
         model.addAttribute("countrylist", service.getCountryList());
         return "country/list";
     }
-
     // ----- 詳細画面 -----
     @GetMapping(value = { "/detail", "/detail/{code}" })
     public String getCountry(@PathVariable(name = "code", required = false) String code, Model model) {
@@ -31,7 +25,6 @@ public class CountryController {
         model.addAttribute("country", country);
         return "country/detail";
     }
-
     // ----- 更新（追加） -----
     @PostMapping("/detail")
     public String postCountry(@RequestParam("code") String code, @RequestParam("name") String name,
@@ -39,22 +32,16 @@ public class CountryController {
         service.updateCountry(code, name, population);
         return "redirect:/country/list";
     }
-
     @GetMapping("/delete/{code}")
     public String deleteCountryForm(@PathVariable("code") String code, Model model) {
         Country country = service.getCountry(code);
         model.addAttribute("country", country);
         return "country/delete";
     }
-
     // ----- 削除 -----
     @PostMapping("/delete")
-    public String deleteCountry(@RequestParam("code") String code) {
+    public String deleteCountry(@RequestParam("code") String code, Model model) {
         service.deleteCountry(code);
         return "redirect:/country/list";
     }
-
-
-
-
 }
